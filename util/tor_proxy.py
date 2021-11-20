@@ -40,7 +40,7 @@ def create_proxy(port: int, names: queue.SimpleQueue):
             names.put(name)
             return
         except:
-            # docker container must not be up yet, wait for 1 second
+            # docker container must not be up yet, wait for 5 seconds
             print('Waiting for {}...'.format(name))
             time.sleep(5)
 

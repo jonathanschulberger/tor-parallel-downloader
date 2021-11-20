@@ -27,7 +27,9 @@ This tool enables you to map an http file listing (Apache/NGINX) and either crea
 
     `pip install -r env/requirements.txt`
 
-## Usage (Linux/Unix)
+## Usage (Linux/Unix) 
+*The user executing Python commands must also have access to the `docker` command. If not, `sudo` must precede the following commands.
+
 You can either:
 - download the entirety of an http file listing
 
