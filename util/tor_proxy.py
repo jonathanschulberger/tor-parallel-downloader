@@ -5,7 +5,7 @@ import subprocess
 import threading
 import time
 
-DOCKER_IMAGE = "jschulberger/tor:0.4.6"
+DOCKER_IMAGE = "jschulberger/tor:latest"
 
 
 def create_proxy(port: int, names: queue.SimpleQueue):
