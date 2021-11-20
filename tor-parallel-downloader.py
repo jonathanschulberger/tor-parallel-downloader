@@ -78,5 +78,3 @@ if __name__ == '__main__':
             resume(args.download_root, debug=args.debug)
     except Exception as exc:
         print(str(exc))
-
-# resume will be broken by download in proxied_tasks because it clears file before downloading
