@@ -21,7 +21,10 @@ def create_proxy(port: int, names: queue.SimpleQueue):
     Returns:
     """
     name = "tor-proxy-{}".format(port)
-    subprocess.Popen("docker run -d --rm --name \"{}\" -p {}:9050 --mount type=bind,source=\"{}\",target=/home/tor/.torrc,readonly {} ".format(name, port, os.path.join(os.getcwd(), "torrc", DOCKER_IMAGE)), shell=True, stdout=subprocess.PIPE)
+    subprocess.Popen(
+        "docker run -d --rm --name \"{}\" -p {}:9050 --mount type=bind,source=\"{}\",target=/home/tor/.torrc,readonly {} ".format(
+            name, port, os.path.join(os.getcwd(), os.path.join("tor", "torrc"), DOCKER_IMAGE)),
+        shell=True, stdout=subprocess.PIPE)
     while True:
         try:
             # attempt TOR request via proxy

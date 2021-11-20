@@ -25,7 +25,7 @@ This tool enables you to map an http file listing (Apache/NGINX) and either crea
     `source ./.venv/bin/activate`
 5) Install python requirements
 
-    `pip install -r requirements.txt`
+    `pip install -r env/requirements.txt`
 
 ## Usage (Linux/Unix)
 You can either:
