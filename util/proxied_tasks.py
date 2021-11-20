@@ -106,7 +106,7 @@ def get_file_listing(base_url: str, number_of_proxies: int = 64, start_port: int
     # return list of all file urls
     return list(files.queue)
 
-def download(url: str, download_root: str, proxy_port: int, debug: bool = False):
+def download(url: str, download_root: str, proxy_port: int, clear_existing: bool = True, debug: bool = False):
     if debug:
         print(f"[INFO] [{proxy_port}] downloading '{url}'")
 
@@ -132,7 +132,7 @@ def download(url: str, download_root: str, proxy_port: int, debug: bool = False)
     if debug:
         print(f"[INFO] [{proxy_port}] creating directory at '{folder_path}'")
     os.makedirs(folder_path, exist_ok=True)
-    if os.path.exists(file_destination):
+    if clear_existing and os.path.exists(file_destination):
         if debug:
             print(f"[INFO] [{proxy_port}] removing existing file at '{file_destination}'")
         os.remove(file_destination)
@@ -185,7 +185,7 @@ def download(url: str, download_root: str, proxy_port: int, debug: bool = False)
             print(f"[INFO] [{proxy_port}] removing partially-downloaded file '{file_destination}'")
         os.remove(file_destination)
 
-def download_files(file_list: queue.SimpleQueue, download_root: str = None, number_of_proxies: int = 64, start_port: int = 10050, debug: bool = False):
+def download_files(file_list: queue.SimpleQueue, download_root: str = None, number_of_proxies: int = 64, start_port: int = 10050, clear_existing: bool = True, debug: bool = False):
     # only deploy as many proxies as we have to
     number_of_proxies = min(file_list.qsize(), number_of_proxies)
     
@@ -216,7 +216,7 @@ def download_files(file_list: queue.SimpleQueue, download_root: str = None, numb
             # if proxy is idling, assign file to download
             if process == None:
                 if not file_list.empty():
-                    proxy_request_map[proxy] = threading.Thread(target=download, args=(file_list.get(), download_root, proxy, debug,))
+                    proxy_request_map[proxy] = threading.Thread(target=download, args=(file_list.get(), download_root, proxy, clear_existing, debug,))
                     proxy_request_map[proxy].start()
                 # clear <proxy_container>:<folder-exploration-thread> mapping
                 elif not process.is_alive():

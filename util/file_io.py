@@ -41,3 +41,5 @@ def write_file_list(files: list, output_path: str = None, file_prefix: str = '',
                 print(f'[ERROR] could not write: {file}\n\t{str(e)}')
     if debug:
         print(f"[INFO] file list written to '{output_path}'")
+
+    return output_path

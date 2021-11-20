@@ -1,30 +1,28 @@
 import argparse
 import os
+import time
 
 from util.file_io import write_file_list, read_file_list
-from util.proxied_tasks import download_files, get_file_listing
+from util.proxied_tasks import download, download_files, get_file_listing
 
 
 def map_and_download(url: str, download_root: str = None, debug: bool = False):
-    # create time.time() folder as <root>
-    # get file listing
-    # write to file in <root>
-    # download files info <root>/files/
-    pass
+    file_list_location = create_file_list(url, download_root, debug=debug)
+    download_file_list(file_list_location, os.path.dirname(file_list_location), debug=debug)
 
 
 def resume(file_list: str, debug: bool = False):
-    download_file_list(file_list, os.path.dirname(file_list), debug=debug)
+    download_file_list(file_list, os.path.dirname(file_list), False, debug=debug)
 
 
-def download_file_list(file_listing: str, download_root: str = None, debug: bool = False):
+def download_file_list(file_listing: str, download_root: str = None, clear_existing: bool = True, debug: bool = False):
     file_list = read_file_list(file_listing, debug=debug)
-    download_files(file_list, download_root=download_root, number_of_proxies=file_list.qsize(), debug=debug)
+    download_files(file_list, download_root=download_root, number_of_proxies=file_list.qsize(), clear_existing=clear_existing, debug=debug)
 
 
 def create_file_list(base_url: str, download_root: str = None, debug: bool = False):
     file_list = get_file_listing(base_url, debug=debug)
-    write_file_list(file_list, download_root, debug=debug)
+    return write_file_list(file_list, download_root, debug=debug)
 
 
 def parse_arguments():
@@ -80,3 +78,5 @@ if __name__ == '__main__':
             resume(args.download_root, debug=args.debug)
     except Exception as exc:
         print(str(exc))
+
+# resume will be broken by download in proxied_tasks because it clears file before downloading
