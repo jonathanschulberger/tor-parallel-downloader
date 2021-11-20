@@ -40,10 +40,10 @@ You can either:
    `python tor-parallel-downloader.py -a get -f <file-list> [-d DOWNLOAD_ROOT]`
 - resume download
 
-   `python tor-parallel-downloader.py -a resume -f <download-root>`
+   `python tor-parallel-downloader.py -a resume -f <file-list>`
 
 ### File List
-Format is as follows:
+Minimum format is as follows:
 ```
 <file-link-1>
 <file-link-2>
