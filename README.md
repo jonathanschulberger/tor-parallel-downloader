@@ -27,7 +27,7 @@ This tool enables you to map an http file listing (Apache/NGINX) and either crea
 
     `pip install -r requirements.txt`
 
-## Usage
+## Usage (Linux/Unix)
 You can either:
 - download the entirety of an http file listing
 
