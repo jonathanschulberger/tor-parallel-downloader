@@ -49,3 +49,6 @@ Minimum format is as follows:
 <file-link-2>
 ...
 ```
+
+## FAQ
+- If you stop this application with `CTRL+C`, you will need to go to `Docker Desktop -> Containers` and click the `stop` button next to each container that starts with `tor-proxy-`.

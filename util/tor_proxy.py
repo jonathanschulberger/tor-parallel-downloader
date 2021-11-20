@@ -5,7 +5,7 @@ import subprocess
 import threading
 import time
 
-TOR_VERSION="0.4.6"
+DOCKER_IMAGE = "jschulberger/tor:0.4.6"
 
 
 def create_proxy(port: int, names: queue.SimpleQueue):
@@ -21,7 +21,7 @@ def create_proxy(port: int, names: queue.SimpleQueue):
     Returns:
     """
     name = "tor-proxy-{}".format(port)
-    subprocess.Popen("docker run -d --rm --name \"{}\" -p {}:9050 --mount type=bind,source=\"{}\",target=/home/tor/.torrc,readonly jschulberger/tor:{} ".format(name, port, os.path.join(os.getcwd(), "torrc", TOR_VERSION)), shell=True, stdout=subprocess.PIPE)
+    subprocess.Popen("docker run -d --rm --name \"{}\" -p {}:9050 --mount type=bind,source=\"{}\",target=/home/tor/.torrc,readonly {} ".format(name, port, os.path.join(os.getcwd(), "torrc", DOCKER_IMAGE)), shell=True, stdout=subprocess.PIPE)
     while True:
         try:
             # attempt TOR request via proxy
