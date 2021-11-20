@@ -9,7 +9,8 @@ import threading
 import time
 import urllib.parse as url_parser
 
-from tor_proxy import create_proxies, destroy_proxies
+from util.file_io import write_file_list, FILE_LISTING_FILENAME
+from util.tor_proxy import create_proxies, destroy_proxies
 
 
 def query(url: str, proxy_port: int, folders: queue.SimpleQueue, files: queue.SimpleQueue, debug: bool = False):
@@ -185,6 +186,9 @@ def download(url: str, download_root: str, proxy_port: int, debug: bool = False)
         os.remove(file_destination)
 
 def download_files(file_list: queue.SimpleQueue, download_root: str = None, number_of_proxies: int = 64, start_port: int = 10050, debug: bool = False):
+    # only deploy as many proxies as we have to
+    number_of_proxies = min(file_list.qsize(), number_of_proxies)
+    
     # create Tor proxies
     container_names = create_proxies(start_port, number_of_proxies)
     if debug:
@@ -195,9 +199,16 @@ def download_files(file_list: queue.SimpleQueue, download_root: str = None, numb
 
     total_file_count = file_list.qsize()
     if not download_root:
-        download_root = str(int(time.time()))
+        download_root = os.path.join('downloads', str(int(time.time())), 'files')
         if debug:
             print(f"[INFO] downloading to '{download_root}'")
+
+    # place file listing
+    os.makedirs(download_root, exist_ok=True)
+    file_list_path = os.path.join(
+        os.path.dirname(os.path.normpath(download_root)), FILE_LISTING_FILENAME)
+    if not os.path.exists(file_list_path):
+        write_file_list(list(file_list.queue), file_list_path, debug=debug)
 
     files_downloaded = 0
     while not file_list.empty() or any(list(proxy_request_map.values())):

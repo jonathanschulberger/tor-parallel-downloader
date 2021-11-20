@@ -1,8 +1,11 @@
 from bs4 import BeautifulSoup
 import csv
+import os
 import queue
 import time
 import urllib.parse as url_parser
+
+FILE_LISTING_FILENAME = 'file_listing.csv'
 
 
 def read_file_list(file_listing: str, debug: bool = False) -> queue.SimpleQueue:
@@ -22,7 +25,7 @@ def read_file_list(file_listing: str, debug: bool = False) -> queue.SimpleQueue:
 def write_file_list(files: list, output_path: str = None, file_prefix: str = '', debug: bool = False):
     # write file paths to csv
     if not output_path:
-        output_path = int(time.time())
+        output_path = os.path.join('downloads', str(int(time.time())), FILE_LISTING_FILENAME)
     
     with open(f'{output_path}.csv', 'w') as outfile:
         csvwriter = csv.writer(outfile)
