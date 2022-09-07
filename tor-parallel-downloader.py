@@ -1,6 +1,6 @@
 import argparse
 import os
-import time
+import traceback
 
 from util.file_io import write_file_list, read_file_list
 from util.proxied_tasks import download, download_files, get_file_listing
@@ -58,12 +58,12 @@ def parse_arguments():
             parser.print_help()
             raise RuntimeError("'-u' required if action is 'get' or <absent>")
 
-    return args, parser
+    return args
 
 
 if __name__ == '__main__':
     try:
-        args, parser = parse_arguments()
+        args = parse_arguments()
         
         if not args.action:
             map_and_download(args.url, args.download_root, debug=args.debug)
@@ -77,4 +77,4 @@ if __name__ == '__main__':
         if args.action == 'resume':
             resume(args.download_root, debug=args.debug)
     except Exception as exc:
-        print(str(exc))
+        traceback.print_exc()

@@ -26,7 +26,10 @@ def write_file_list(files: list, output_path: str = None, file_prefix: str = '',
     if not output_path:
         output_path = os.path.join('downloads', str(int(time.time())), FILE_LISTING_FILENAME)
     
-    with open(f'{output_path}.csv', 'w') as outfile:
+    if not os.path.exists(os.path.dirname(output_path)):
+        os.makedirs(os.path.dirname(output_path))
+
+    with open(output_path, 'w') as outfile:
         csvwriter = csv.writer(outfile)
         csvwriter.writerow(['timestamp', 'size (bytes)', 'url'])
         for file in files:

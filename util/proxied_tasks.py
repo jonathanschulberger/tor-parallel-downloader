@@ -34,7 +34,7 @@ def query(url: str, proxy_port: int, folders: queue.SimpleQueue, files: queue.Si
         try:
             page = req_session.get(url, headers=heads, timeout=30).text
             if debug:
-                print(f'[INFO] [{proxy_port}] data received\n\t{page.__dict__}')
+                print(f'[INFO] [{proxy_port}] data received\n\t{page}')
         except Exception as e:
             print(f"[ERROR] [{proxy_port}] failed to get '{url}'\n\t{str(e)}\n\tadding back into queue")
             folders.put(url)
@@ -66,7 +66,7 @@ def query(url: str, proxy_port: int, folders: queue.SimpleQueue, files: queue.Si
                 }
             })
 
-def get_file_listing(base_url: str, number_of_proxies: int = 64, start_port: int = 10050, debug: bool = False):
+def get_file_listing(base_url: str, number_of_proxies: int = 8, start_port: int = 10050, debug: bool = False):
     # thread-safe objects for storing file listing and remaining folders
     files = queue.SimpleQueue()
     folders = queue.SimpleQueue()
@@ -104,7 +104,7 @@ def get_file_listing(base_url: str, number_of_proxies: int = 64, start_port: int
     print('success')
 
     # return list of all file urls
-    return list(files.queue)
+    return [files.get() for _ in range(files.qsize())]
 
 def download(url: str, download_root: str, proxy_port: int, clear_existing: bool = True, debug: bool = False):
     if debug:
@@ -185,7 +185,7 @@ def download(url: str, download_root: str, proxy_port: int, clear_existing: bool
             print(f"[INFO] [{proxy_port}] removing partially-downloaded file '{file_destination}'")
         os.remove(file_destination)
 
-def download_files(file_list: queue.SimpleQueue, download_root: str = None, number_of_proxies: int = 64, start_port: int = 10050, clear_existing: bool = True, debug: bool = False):
+def download_files(file_list: queue.SimpleQueue, download_root: str = None, number_of_proxies: int = 16, start_port: int = 10050, clear_existing: bool = True, debug: bool = False):
     # only deploy as many proxies as we have to
     number_of_proxies = min(file_list.qsize(), number_of_proxies)
     
