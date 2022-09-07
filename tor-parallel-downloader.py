@@ -45,6 +45,9 @@ def parse_arguments():
                         action="store_true")
     args = parser.parse_args()
 
+    if args.url and not args.url.endswith("/"):
+        args.url = args.url + "/"
+
     if args.action in ["get", "resume"]:
         if not args.target_path:
             parser.print_help()
